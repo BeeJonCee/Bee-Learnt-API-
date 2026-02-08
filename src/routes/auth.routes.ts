@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { confirmVerification, login, me, register, sendVerification, socialBridge, exchangeNeonToken } from "../controllers/auth.controller.js";
+import { login, me, socialBridge, exchangeNeonToken } from "../controllers/auth.controller.js";
 import { requireAuth } from "../core/middleware/auth.js";
 import { validateBody } from "../core/middleware/validate.js";
-import { emailVerificationConfirmSchema, emailVerificationSendSchema, loginSchema, registerSchema } from "../shared/validators/index.js";
+import { loginSchema } from "../shared/validators/index.js";
 
 const authRoutes = Router();
 
@@ -10,42 +10,14 @@ const authRoutes = Router();
  * @swagger
  * tags:
  *   name: Auth
- *   description: Authentication and session management
+ *   description: Authentication and session management (Neon Auth is sole identity provider)
  */
-
-/**
- * @swagger
- * /api/auth/register:
- *   post:
- *     summary: Register a new BeeLearnt account
- *     tags: [Auth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/RegisterRequest'
- *     responses:
- *       201:
- *         description: Account created successfully
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/AuthResponse'
- *       400:
- *         description: Invalid registration details
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ErrorResponse'
- */
-authRoutes.post("/register", validateBody(registerSchema), register);
 
 /**
  * @swagger
  * /api/auth/login:
  *   post:
- *     summary: Authenticate a user and return a JWT
+ *     summary: Authenticate a user and return a JWT (legacy + Neon Auth credential fallback)
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -68,9 +40,6 @@ authRoutes.post("/register", validateBody(registerSchema), register);
  *               $ref: '#/components/schemas/ErrorResponse'
  */
 authRoutes.post("/login", validateBody(loginSchema), login);
-
-authRoutes.post("/verify/send", validateBody(emailVerificationSendSchema), sendVerification);
-authRoutes.post("/verify/confirm", validateBody(emailVerificationConfirmSchema), confirmVerification);
 
 /**
  * @swagger
@@ -101,7 +70,7 @@ authRoutes.post("/social-bridge", socialBridge);
  * @swagger
  * /api/auth/exchange-neon-token:
  *   post:
- *     summary: Exchange Neon Auth session token for backend JWT (fast path)
+ *     summary: Exchange Neon Auth session token for backend JWT (primary auth path)
  *     tags: [Auth]
  *     requestBody:
  *       required: true

@@ -6,7 +6,7 @@
  * 
  * Database Structure:
  * - neondb (Neon Auth database)
- *   └── public schema
+ *   └── neon_auth schema
  *       ├── user (authentication identities)
  *       ├── account (OAuth providers, passwords)
  *       ├── session (active sessions)

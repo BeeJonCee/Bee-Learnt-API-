@@ -1,19 +1,21 @@
 /**
  * Neon Auth Schema Mappings
- * 
- * These tables are in the neondb database (auto-created by Neon)
+ *
+ * These tables are in the neondb database (auto-created by Neon).
  * They are managed by Neon Auth and should be treated as read-only
  * from the application perspective.
- * 
+ *
  * Connection: neondb (separate from beelearnt database)
- * Schema: public (all auth tables are in public schema of neondb)
+ * Schema: neon_auth (Neon Auth creates tables in the "neon_auth" schema)
  */
 
-import { pgTable, uuid, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+import { pgSchema, uuid, text, timestamp, boolean, jsonb } from "drizzle-orm/pg-core";
+
+const neonAuth = pgSchema("neon_auth");
 
 // ============ CORE USER TABLE ============
 
-export const neonAuthUsers = pgTable("user", {
+export const neonAuthUsers = neonAuth.table("user", {
   id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
@@ -29,7 +31,7 @@ export const neonAuthUsers = pgTable("user", {
 
 // ============ AUTHENTICATION TABLES ============
 
-export const neonAuthAccounts = pgTable("account", {
+export const neonAuthAccounts = neonAuth.table("account", {
   id: uuid("id").primaryKey(),
   accountId: text("accountId").notNull(),
   providerId: text("providerId").notNull(),
@@ -45,7 +47,7 @@ export const neonAuthAccounts = pgTable("account", {
   updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 });
 
-export const neonAuthSessions = pgTable("session", {
+export const neonAuthSessions = neonAuth.table("session", {
   id: uuid("id").primaryKey(),
   expiresAt: timestamp("expiresAt", { withTimezone: true }).notNull(),
   token: text("token").notNull().unique(),
@@ -60,7 +62,7 @@ export const neonAuthSessions = pgTable("session", {
 
 // ============ ORGANIZATION TABLES ============
 
-export const neonAuthOrganizations = pgTable("organization", {
+export const neonAuthOrganizations = neonAuth.table("organization", {
   id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   slug: text("slug").notNull().unique(),
@@ -69,7 +71,7 @@ export const neonAuthOrganizations = pgTable("organization", {
   metadata: text("metadata"),
 });
 
-export const neonAuthMembers = pgTable("member", {
+export const neonAuthMembers = neonAuth.table("member", {
   id: uuid("id").primaryKey(),
   organizationId: uuid("organizationId").notNull().references(() => neonAuthOrganizations.id),
   userId: uuid("userId").notNull().references(() => neonAuthUsers.id),
@@ -77,7 +79,7 @@ export const neonAuthMembers = pgTable("member", {
   createdAt: timestamp("createdAt", { withTimezone: true }).notNull(),
 });
 
-export const neonAuthInvitations = pgTable("invitation", {
+export const neonAuthInvitations = neonAuth.table("invitation", {
   id: uuid("id").primaryKey(),
   organizationId: uuid("organizationId").notNull().references(() => neonAuthOrganizations.id),
   email: text("email").notNull(),
@@ -90,7 +92,7 @@ export const neonAuthInvitations = pgTable("invitation", {
 
 // ============ VERIFICATION & SECURITY ============
 
-export const neonAuthVerifications = pgTable("verification", {
+export const neonAuthVerifications = neonAuth.table("verification", {
   id: uuid("id").primaryKey(),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
@@ -99,7 +101,7 @@ export const neonAuthVerifications = pgTable("verification", {
   updatedAt: timestamp("updatedAt", { withTimezone: true }).notNull(),
 });
 
-export const neonAuthJWKS = pgTable("jwks", {
+export const neonAuthJWKS = neonAuth.table("jwks", {
   id: uuid("id").primaryKey(),
   publicKey: text("publicKey").notNull(),
   privateKey: text("privateKey").notNull(),
@@ -109,7 +111,7 @@ export const neonAuthJWKS = pgTable("jwks", {
 
 // ============ PROJECT CONFIGURATION ============
 
-export const neonAuthProjectConfig = pgTable("project_config", {
+export const neonAuthProjectConfig = neonAuth.table("project_config", {
   id: uuid("id").primaryKey(),
   name: text("name").notNull(),
   endpointId: text("endpoint_id").notNull(),

@@ -1,16 +1,9 @@
 import type { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { db } from "../core/database/index.js";
-import { sql } from "drizzle-orm";
 import { asyncHandler } from "../core/middleware/async-handler.js";
 import { env } from "../config/env.js";
 import { syncNeonAuthUserToApp } from "../services/neon-auth-sync.js";
-import {
-  confirmEmailVerificationCode,
-  loginUser,
-  registerUser,
-  sendEmailVerificationCode,
-} from "../services/auth.service.js";
+import { loginUser } from "../services/auth.service.js";
 
 interface NeonAuthToken {
   sub: string;
@@ -19,11 +12,6 @@ interface NeonAuthToken {
   iat: number;
   exp: number;
 }
-
-export const register = asyncHandler(async (req: Request, res: Response) => {
-  const result = await registerUser(req.body);
-  res.status(201).json(result);
-});
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const result = await loginUser(req.body);
@@ -36,18 +24,6 @@ export const me = asyncHandler(async (req: Request, res: Response) => {
     return;
   }
   res.json({ user: req.user });
-});
-
-export const sendVerification = asyncHandler(async (req: Request, res: Response) => {
-  const { email } = req.body as { email: string };
-  await sendEmailVerificationCode(email);
-  res.json({ ok: true });
-});
-
-export const confirmVerification = asyncHandler(async (req: Request, res: Response) => {
-  const { email, code } = req.body as { email: string; code: string };
-  await confirmEmailVerificationCode(email, code);
-  res.json({ ok: true });
 });
 
 export const socialBridge = asyncHandler(async (req: Request, res: Response) => {

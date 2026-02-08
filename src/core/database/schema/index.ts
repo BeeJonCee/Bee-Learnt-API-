@@ -7,8 +7,7 @@
 export * from "./enums.js";
 export * from "./types.js";
 
-// Auth & Users (Base entities)
-export * from "./auth.schema.js";
+// Users (Base entities)
 export * from "./users.schema.js";
 
 // System (Independent tables)

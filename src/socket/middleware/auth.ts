@@ -2,7 +2,7 @@ import type { Socket } from "socket.io";
 import * as jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
 import type { BeeLearntRole } from "../../shared/types/auth.js";
-import { verifyNeonAuthSession, syncUserFromNeonAuth, getNeonAuthUser } from "../../lib/auth/neon-auth-sync.js";
+import { verifyNeonAuthSession, syncUserFromNeonAuth, getNeonAuthUser } from "../../services/neon-auth-sync.js";
 import { verifyNeonToken } from "../../shared/utils/neon-auth.js";
 
 interface SocketUser {

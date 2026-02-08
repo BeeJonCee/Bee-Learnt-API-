@@ -8,7 +8,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { roleEnum } from "./enums.js";
-import { betterAuthUsers } from "./auth.schema.js";
 
 /**
  * User Management Schema
@@ -27,7 +26,7 @@ export const roles = pgTable("roles", {
 // ── USERS (PUBLIC SCHEMA) ───────────────────
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey().references(() => betterAuthUsers.id),
+  id: text("id").primaryKey(),
   name: varchar("name", { length: 120 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
   passwordHash: text("password_hash"),

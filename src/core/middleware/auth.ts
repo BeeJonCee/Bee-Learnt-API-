@@ -6,7 +6,7 @@ import {
   getNeonAuthUser,
   syncUserFromNeonAuth,
   verifyNeonAuthSession,
-} from "../../lib/auth/neon-auth-sync.js";
+} from "../../services/neon-auth-sync.js";
 import { verifyNeonToken } from "../../shared/utils/neon-auth.js";
 
 type JwtPayload = {

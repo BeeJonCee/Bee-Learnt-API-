@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { sql } from "drizzle-orm";
 import { db as authDb } from "../core/database/neon-auth-db.js";
-import { syncUserFromNeonAuth } from "../lib/auth/neon-auth-sync.js";
+import { syncUserFromNeonAuth } from "../services/neon-auth-sync.js";
 
 async function run() {
   if (!authDb) {
